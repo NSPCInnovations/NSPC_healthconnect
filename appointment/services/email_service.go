@@ -11,7 +11,7 @@ const (
 	appPassword = "cbyogiyizhrepyhg"
 )
 
-func SendEmailWithPDF(toEmail, DoctorID string, HospitalIDstring, filePath, AppointmentID string) {
+func SendEmailWithPDF(toEmail, DoctorID, HospitalIDstring, filePath, AppointmentID string) {
 	m := gomail.NewMessage()
 	m.SetHeader("From", "ameermahammad40@gmail.com")
 	m.SetHeader("To", toEmail)
