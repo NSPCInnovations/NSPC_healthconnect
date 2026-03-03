@@ -11,12 +11,12 @@ const (
 	appPassword = "cbyogiyizhrepyhg"
 )
 
-func SendEmailWithPDF(toEmail, filePath, patientName string) {
+func SendEmailWithPDF(toEmail, DoctorID string, HospitalIDstring, filePath, AppointmentID string) {
 	m := gomail.NewMessage()
 	m.SetHeader("From", "ameermahammad40@gmail.com")
 	m.SetHeader("To", toEmail)
 	m.SetHeader("Subject", "Booking Confirmed!")
-	m.SetBody("text/html", "Dear "+patientName+",<br><br>Your appointment is <b>Confirmed</b>. Receipt is attached.")
+	m.SetBody("text/html", "Dear Patient,<br><br>Your appointment is <b>Confirmed</b>. Appointment ID: "+AppointmentID+". Receipt is attached.")
 	m.Attach(filePath)
 
 	// must use app password for Gmail SMTP authentication

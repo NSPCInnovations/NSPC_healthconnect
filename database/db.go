@@ -1,4 +1,4 @@
-package config
+package database
 
 import (
 	"fmt"
@@ -13,13 +13,26 @@ import (
 var DB *gorm.DB
 
 func ConnectDB() {
-	godotenv.Load()
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Warning: .env file not found, using system env variables")
+	}
 
-	var err error
+	user := os.Getenv("DB_USER")
+	pass := os.Getenv("DB_PASS")
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	name := os.Getenv("DB_NAME")
+
+	// Debugging kosam check chey (Password print cheyoddu)
+	fmt.Printf("Connecting to: %s@tcp(%s:%s)/%s\n", user, host, port, name)
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		user, pass, host, port, name)
+
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect database: ", err)
 	}
+	fmt.Println(" Database Connected Successfully!")
 }

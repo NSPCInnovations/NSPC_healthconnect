@@ -28,7 +28,7 @@ func CreateRazorpayOrder(amountInPaise int64, receiptID string) (string, error) 
 
 	return body["id"].(string), nil
 }
-func CreatePaymentLink(orderID string, amount float64, patientName, mobile string) (string, error) {
+func CreatePaymentLink(orderID string, amount float64) (string, error) {
 	// Ikkada nee existing keys vaadu (already paina define chesi unte avi vaadu)
 	client := razorpay.NewClient(RazorpayKeyID, RazorpayKeySecret)
 
@@ -36,11 +36,9 @@ func CreatePaymentLink(orderID string, amount float64, patientName, mobile strin
 		"amount":         int(amount * 100),
 		"currency":       "INR",
 		"accept_partial": false,
-		"description":    "Hospital Appointment - " + patientName,
+		"description":    "Hospital Appointment - " + orderID,
 		"customer": map[string]interface{}{
-			"name":    patientName,
-			"contact": mobile,
-			"email":   "ameermahammad40@gmail.com",
+			"email": "ameermahammad40@gmail.com",
 		},
 		"notify": map[string]interface{}{
 			"sms":   true,

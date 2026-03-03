@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"HospitalAppointment_booking/config"
-	"HospitalAppointment_booking/models"
-	"HospitalAppointment_booking/services"
+	"NSPC_HEALTHCONNECT/appointment"
+	"NSPC_HEALTHCONNECT/appointment/services"
+	"NSPC_HEALTHCONNECT/database"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -76,8 +76,8 @@ func PaymentWebhook(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Final Search ID: %s\n", razorpayOrderID)
 
 	// --- DB UPDATE SECTION ---
-	var booking models.Booking
-	result := config.DB.Where("order_id = ?", razorpayOrderID).First(&booking)
+	var booking appointment.Booking
+	result := database.DB.Where("order_id = ?", razorpayOrderID).First(&booking)
 
 	if result.Error != nil {
 		fmt.Printf(" DB Error: No record found for ID %s. Check if DB was updated on creation.\n", razorpayOrderID)
@@ -95,7 +95,7 @@ func PaymentWebhook(w http.ResponseWriter, r *http.Request) {
 		newAmount := booking.Amount / 100
 
 		// 2. Database Status Update
-		err := config.DB.Model(&booking).Updates(map[string]interface{}{
+		err := database.DB.Model(&booking).Updates(map[string]interface{}{
 			"status": "confirmed",
 			"amount": newAmount,
 		}).Error
@@ -114,8 +114,8 @@ func PaymentWebhook(w http.ResponseWriter, r *http.Request) {
 			if pdfErr != nil {
 				fmt.Printf("PDF Generation Error: %v\n", pdfErr)
 			} else {
-				go services.SendEmailWithPDF(booking.PatientEmail, pdfPath, booking.PatientName)
-				fmt.Printf("Email Dispatched to: %s\n", booking.PatientEmail)
+				go services.SendEmailWithPDF(booking.Email, booking.DoctorID, booking.HospitalID, pdfPath, booking.AppointmentID)
+				fmt.Printf("Email Dispatched to: %s\n", booking.Email)
 			}
 
 			fmt.Printf("SUCCESS: Booking %s Confirmed!\n", booking.AppointmentID)

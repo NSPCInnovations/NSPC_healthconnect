@@ -1,7 +1,7 @@
 package services
 
 import (
-	"HospitalAppointment_booking/models"
+	"NSPC_HEALTHCONNECT/appointment"
 	"fmt"
 	"os"
 	"strings"
@@ -9,7 +9,7 @@ import (
 	"github.com/jung-kurt/gofpdf"
 )
 
-func GenerateBookingPDF(b models.Booking) (string, error) {
+func GenerateBookingPDF(b appointment.Booking) (string, error) {
 	// Folder lekapothe create chesthundhi
 	if _, err := os.Stat("receipts"); os.IsNotExist(err) {
 		os.Mkdir("receipts", 0755)
@@ -24,8 +24,6 @@ func GenerateBookingPDF(b models.Booking) (string, error) {
 
 	pdf.SetFont("Arial", "", 12)
 	pdf.Cell(0, 10, fmt.Sprintf("Appointment ID: %s", b.AppointmentID))
-	pdf.Ln(8)
-	pdf.Cell(0, 10, fmt.Sprintf("Patient: %s (%d Years, %s)", b.PatientName, b.PatientAge, b.PatientGender))
 	pdf.Ln(8)
 	pdf.Cell(0, 10, fmt.Sprintf("Date: %s", b.AppointmentDate))
 	pdf.Ln(8)

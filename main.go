@@ -5,15 +5,14 @@ import (
 	"log"
 	"net/http"
 
-	"HospitalAppointment_booking/config"
-	"HospitalAppointment_booking/handlers"
-	"HospitalAppointment_booking/middleware"
-	"HospitalAppointment_booking/models"
+	"NSPC_HEALTHCONNECT/appointment"
+	"NSPC_HEALTHCONNECT/appointment/handlers"
+	"NSPC_HEALTHCONNECT/database"
 )
 
 func main() {
-	config.ConnectDB()
-	config.DB.AutoMigrate(&models.Booking{})
+	database.ConnectDB()
+	database.DB.AutoMigrate(&appointment.Booking{})
 
 	mux := http.NewServeMux()
 
@@ -22,9 +21,9 @@ func main() {
 	mux.HandleFunc("/api/v1/booking/history", handlers.GetMyBookings)
 	mux.HandleFunc("/api/v1/webhook/payment", handlers.PaymentWebhook)
 	// Wrap mux with middlewares from the middleware package
-	finalHandler := middleware.RecoveryMiddleware(
-		middleware.LoggingMiddleware(
-			middleware.JSONContentMiddleware(mux),
+	finalHandler := database.RecoveryMiddleware(
+		database.LoggingMiddleware(
+			database.JSONContentMiddleware(mux),
 		),
 	)
 
