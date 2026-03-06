@@ -1,9 +1,9 @@
-package patient_registration
+package patient
 
 import (
 	"net/http"
 
-	"Healthcare_patient/config"
+	"NSPC_HEALTHCONNECT/database"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +31,7 @@ func RegisterPatient(c *gin.Context) {
 	}
 	var existingPatient Patient
 
-	err := config.DB.
+	err := database.DB.
 		Where("mobile_number = ?", patient.MobileNumber).
 		First(&existingPatient).Error
 
@@ -42,7 +42,7 @@ func RegisterPatient(c *gin.Context) {
 		})
 		return
 	}
-	if err := config.DB.Create(&patient).Error; err != nil {
+	if err := database.DB.Create(&patient).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  "FAILED",
 			"message": "Failed to register patient",

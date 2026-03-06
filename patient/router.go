@@ -1,4 +1,4 @@
-package patient_registration
+package patient
 
 import "github.com/gin-gonic/gin"
 
