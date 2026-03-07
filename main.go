@@ -1,10 +1,9 @@
 package main
 
 import (
-	"os"
-
-	"nspc_healthcare/config"
-	"nspc_healthcare/doctor"
+	"NSPC_healthconnect/database"
+	"NSPC_healthconnect/doctor"
+	"NSPC_healthconnect/router"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -12,29 +11,20 @@ import (
 
 func main() {
 
-	// load env
 	godotenv.Load()
 
-	// db connect
-	config.ConnectDB()
+	database.ConnectDB()
 
-	// migrate
-	config.DB.AutoMigrate(&doctor.Doctor{})
+	database.DB.AutoMigrate(
+		&doctor.Doctor{},
+		&doctor.DoctorVerification{},
+		&doctor.DoctorAvailability{},
+		&doctor.DoctorHospitalMapping{},
+	)
 
 	r := gin.Default()
 
-	// 🔥 TEST ROUTE
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "pong"})
-	})
+	router.DoctorRoutes(r)
 
-	// doctor routes
-	doctor.RegisterDoctorRoutes(r)
-
-	port := os.Getenv("APP_PORT")
-	if port == "" {
-		port = "8080"
-	}
-
-	r.Run(":" + port)
+	r.Run(":8080")
 }
