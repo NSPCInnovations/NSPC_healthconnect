@@ -5,23 +5,17 @@ import "time"
 type Doctor struct {
 	ID uint `gorm:"primaryKey"`
 
-	DoctorRegNo string `gorm:"unique" json:"doctor_reg_no"`
-	UserID      string `json:"user_id"`
+	DoctorRegNo string `gorm:"unique;not null" json:"doctor_reg_no"`
+	UserID      string `gorm:"unique;not null" json:"user_id"`
 
-	Prefix     string `json:"prefix"`
-	FirstName  string `json:"first_name"`
-	MiddleName string `json:"middle_name"`
-	LastName   string `json:"last_name"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
 
 	Email  string `gorm:"unique" json:"email"`
 	Mobile string `gorm:"unique" json:"mobile"`
 
-	Specialization string `json:"specialization"`
-	Experience     int    `json:"experience"`
-	Description    string `json:"description"`
-
+	Specialization  string  `json:"specialization"`
 	ConsultationFee float64 `json:"consultation_fee"`
-	Currency        string  `json:"currency"`
 
 	Location string `json:"location"`
 
@@ -30,14 +24,13 @@ type Doctor struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
-
 type DoctorVerification struct {
 	ID uint `gorm:"primaryKey"`
 
 	DoctorID uint
 
-	VerificationStatus string
-	VerifiedBy         string
+	VerificationStatus  string
+	VerifiedBy          string
 	ApprovalDescription string
 
 	CreatedAt time.Time
