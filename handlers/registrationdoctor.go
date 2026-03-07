@@ -36,7 +36,7 @@ func RegisterDoctor(c *gin.Context) {
 
 	err := database.DB.
 		Where(
-			"doctor_reg_no = ? OR user_id = ? OR email = ? OR mobile = ?",
+			"doctor_reg_no = ? && user_id = ? OR email = ? OR mobile = ?",
 			doc.DoctorRegNo,
 			doc.UserID,
 			doc.Email,
@@ -47,7 +47,7 @@ func RegisterDoctor(c *gin.Context) {
 	if err == nil {
 
 		c.JSON(http.StatusConflict, gin.H{
-			"message": "Doctor already exists with same registration number, user id, email, or mobile",
+			"message": "Doctor already exists with same registration number and user id",
 		})
 		return
 	}
