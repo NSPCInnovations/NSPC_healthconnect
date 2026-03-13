@@ -11,20 +11,31 @@ import (
 
 func main() {
 
-	godotenv.Load()
+	// Load environment variables
+	err := godotenv.Load()
+	if err != nil {
+		panic("Error loading .env file")
+	}
 
+	// Connect Database
 	database.ConnectDB()
 
+	// Auto migrate all doctor related tables
 	database.DB.AutoMigrate(
 		&doctor.Doctor{},
 		&doctor.DoctorVerification{},
 		&doctor.DoctorAvailability{},
-		&doctor.DoctorHospitalMapping{},
+		&doctor.DoctorHospitalMap{},
+		&doctor.DoctorDocument{},
+		&doctor.DoctorRating{},
 	)
 
+	// Initialize Gin router
 	r := gin.Default()
 
+	// Register doctor routes
 	router.DoctorRoutes(r)
 
+	// Start server
 	r.Run(":8080")
 }

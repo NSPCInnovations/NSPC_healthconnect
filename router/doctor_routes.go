@@ -6,13 +6,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func DoctorRoutes(router *gin.Engine) {
+func DoctorRoutes(r *gin.Engine) {
 
-	group := router.Group("/api/doctors")
+	group := r.Group("/api/doctors")
 
+	// Doctor Registration
 	group.POST("/register", handlers.RegisterDoctor)
+
+	// Verify Doctor
 	group.PUT("/verify/:id", handlers.VerifyDoctor)
+
+	// Add Availability
 	group.POST("/availability", handlers.AddDoctorAvailability)
-	group.GET("/list", handlers.ListDoctors)
+
+	// Map Doctor Hospital
 	group.POST("/map-hospital", handlers.MapDoctorHospital)
+
+	// Upload Document
+	group.POST("/document", handlers.UploadDoctorDocument)
+
+	// Add Rating
+	group.POST("/rating", handlers.AddDoctorRating)
+
+	// List Doctors
+	group.GET("/list", handlers.ListDoctors)
 }
